@@ -1,4 +1,6 @@
 <?php
+require '../db/connect.php'; // Inkludera databasanslutningen
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
     $cardName = urlencode($_POST['card_name']); // Kodar kortnamnet för URL
     $url = "https://api.scryfall.com/cards/named?exact=$cardName";
@@ -32,12 +34,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
     if (isset($data['object']) && $data['object'] === 'error') {
         echo "<p>Error from Scryfall: " . htmlspecialchars($data['details']) . "</p>";
     } elseif (!empty($data)) {
-        // Visa den hämtade datan
-        echo "<h1>Card Details for: " . htmlspecialchars($data['name']) . "</h1>";
-        echo "<p><strong>Mana Cost:</strong> " . htmlspecialchars($data['mana_cost'] ?? 'N/A') . "</p>";
-        echo "<p><strong>Type Line:</strong> " . htmlspecialchars($data['type_line'] ?? 'N/A') . "</p>";
-        echo "<p><strong>Set Name:</strong> " . htmlspecialchars($data['set_name'] ?? 'N/A') . "</p>";
-        echo "<p><strong>Rarity:</strong> " . htmlspecialchars($data['rarity'] ?? 'N/A') . "</p>";
+        // Uppdatera databasen med hämtad data
+        try {
+            $stmt = $conn->prepare("
+                UPDATE cards
+                SET mana_cost = :mana_cost,
+                    type_line = :type_line,
+                    set_name = :set_name,
+                    rarity = :rarity
+                WHERE card_name = :card_name
+            ");
+            $stmt->bindParam(':mana_cost', $data['mana_cost']);
+            $stmt->bindParam(':type_line', $data['type_line']);
+            $stmt->bindParam(':set_name', $data['set_name']);
+            $stmt->bindParam(':rarity', $data['rarity']);
+            $stmt->bindParam(':card_name', $_POST['card_name']);
+            $stmt->execute();
+
+            // Om uppdateringen lyckas, skicka tillbaka användaren till index.php
+            header("Location: index.php");
+            exit;
+        } catch (PDOException $e) {
+            echo "<p>Error updating card: " . htmlspecialchars($e->getMessage()) . "</p>";
+        }
     } else {
         echo "<p>Card not found on Scryfall.</p>";
     }
