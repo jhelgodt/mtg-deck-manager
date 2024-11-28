@@ -1,5 +1,6 @@
 <?php
-require '../../db/connect.php'; // Inkludera databasanslutningen
+// Inkludera connect.php med en absolut sökväg
+require __DIR__ . '/../../db/connect.php'; 
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
     $cardName = urlencode($_POST['card_name']); // Kodar kortnamnet för URL

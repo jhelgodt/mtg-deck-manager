@@ -1,4 +1,8 @@
 <?php
+// Inkludera connect.php med en absolut sökväg
+// Inkludera connect.php med en absolut sökväg
+require __DIR__ . '/../../db/connect.php'; 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['new_card_name'])) {
     $newCardName = htmlspecialchars($_POST['new_card_name']);
 

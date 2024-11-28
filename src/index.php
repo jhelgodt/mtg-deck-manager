@@ -1,6 +1,6 @@
 <?php
 include 'templates/header.php'; // Header
-require '../db/connect.php';    // Databasanslutning
+require __DIR__ . '/../db/connect.php';
 
 // Visa listan över kort
 include 'cards/list.php';

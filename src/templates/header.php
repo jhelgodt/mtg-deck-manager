@@ -9,8 +9,8 @@
 <header>
     <h1>Magic the Gathering: Deck Builder</h1>
     <nav>
-        <a href="/src/index.php">Home</a>
-        <a href="/src/cards/add.php">Add Card</a>
-        <a href="/src/cards/list.php">View Cards</a>
+        <a href="../index.php">Home</a>
+        <a href="../cards/add.php">Add Card</a>
+        <a href="../cards/list.php">View Cards</a>
     </nav>
 </header>

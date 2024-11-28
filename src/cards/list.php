@@ -1,13 +1,14 @@
 <?php
+require __DIR__ . '/../../db/connect.php'; 
+
 try {
-    // Hämta alla kort från databasen
+    // Hämta alla kort från tabellen
     $stmt = $conn->query("SELECT * FROM cards");
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     die("Error fetching cards: " . $e->getMessage());
 }
 ?>
-
 <h2>Cards in Database</h2>
 <table border="1" cellspacing="0" cellpadding="5">
     <thead>
@@ -22,7 +23,6 @@ try {
             <th>Oracle Text</th>
             <th>Image</th>
             <th>Last Updated</th>
-            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -45,17 +45,11 @@ try {
                     <?php endif; ?>
                 </td>
                 <td><?= htmlspecialchars($row['last_updated'] ?? 'N/A') ?></td>
-                <td>
-                    <form action="cards/fetch.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="card_name" value="<?= htmlspecialchars($row['card_name']) ?>">
-                        <button type="submit">Fetch Data</button>
-                    </form>
-                </td>
             </tr>
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td colspan="11">No cards found in the database.</td>
+            <td colspan="10">No cards found in the database.</td>
         </tr>
     <?php endif; ?>
     </tbody>
