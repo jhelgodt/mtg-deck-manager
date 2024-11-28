@@ -31,35 +31,77 @@ try {
                 <th>Type Line</th>
                 <th>Set Name</th>
                 <th>Rarity</th>
-                <th>Created At</th>
+                <th>Oracle Text</th>
+                <th>Artist</th>
+                <th>Color Identity</th>
+                <th>Produced Mana</th>
+                <th>CMC</th>
+                <th>Games</th>
+                <th>Reserved</th>
+                <th>Foil</th>
+                <th>Nonfoil</th>
+                <th>Oversized</th>
+                <th>Promo</th>
+                <th>Reprint</th>
+                <th>USD Price</th>
+                <th>EUR Price</th>
+                <th>TIX Price</th>
+                <th>Toughness</th>
+                <th>Power</th>
+                <th>Image</th>
+                <th>Last Updated</th>
             </tr>
         </thead>
         <tbody>
-    <?php if (!empty($rows)): ?>
-        <?php foreach ($rows as $row): ?>
+        <?php if (!empty($rows)): ?>
+            <?php foreach ($rows as $row): ?>
+                <tr>
+                    <td><?= htmlspecialchars($row['id']) ?></td>
+                    <td><?= htmlspecialchars($row['card_name']) ?></td>
+                    <td><?= htmlspecialchars($row['mana_cost']) ?></td>
+                    <td><?= htmlspecialchars($row['type_line']) ?></td>
+                    <td><?= htmlspecialchars($row['set_name']) ?></td>
+                    <td><?= htmlspecialchars($row['rarity']) ?></td>
+                    <td><?= htmlspecialchars($row['oracle_text'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['artist'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['color_identity'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['produced_mana'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['cmc'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['games'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['reserved'] ? 'Yes' : 'No') ?></td>
+                    <td><?= htmlspecialchars($row['foil'] ? 'Yes' : 'No') ?></td>
+                    <td><?= htmlspecialchars($row['nonfoil'] ? 'Yes' : 'No') ?></td>
+                    <td><?= htmlspecialchars($row['oversized'] ? 'Yes' : 'No') ?></td>
+                    <td><?= htmlspecialchars($row['promo'] ? 'Yes' : 'No') ?></td>
+                    <td><?= htmlspecialchars($row['reprint'] ? 'Yes' : 'No') ?></td>
+                    <td><?= htmlspecialchars($row['usd_price'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['eur_price'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['tix_price'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['toughness'] ?? 'N/A') ?></td>
+                    <td><?= htmlspecialchars($row['power'] ?? 'N/A') ?></td>
+                    <td>
+                        <?php if (!empty($row['image_uri'])): ?>
+                            <img src="<?= htmlspecialchars($row['image_uri']) ?>" alt="Card Image" style="max-width: 100px;">
+                        <?php else: ?>
+                            N/A
+                        <?php endif; ?>
+                    </td>
+                    <td><?= htmlspecialchars($row['last_updated'] ?? 'N/A') ?></td>
+                    <td>
+                        <!-- Lägg till en knapp som skickar kortnamnet till fetch_card.php -->
+                        <form action="fetch_card.php" method="POST" style="display:inline;">
+                            <input type="hidden" name="card_name" value="<?= htmlspecialchars($row['card_name']) ?>">
+                            <button type="submit">Fetch Data</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
             <tr>
-                <td><?= htmlspecialchars($row['id']) ?></td>
-                <td><?= htmlspecialchars($row['card_name']) ?></td>
-                <td><?= htmlspecialchars($row['mana_cost']) ?></td>
-                <td><?= htmlspecialchars($row['type_line']) ?></td>
-                <td><?= htmlspecialchars($row['set_name']) ?></td>
-                <td><?= htmlspecialchars($row['rarity']) ?></td>
-                <td><?= htmlspecialchars($row['created_at']) ?></td>
-                <td>
-                    <!-- Lägg till en knapp som skickar kortnamnet till fetch_card.php -->
-                    <form action="fetch_card.php" method="POST" style="display:inline;">
-                        <input type="hidden" name="card_name" value="<?= htmlspecialchars($row['card_name']) ?>">
-                        <button type="submit">Fetch Data</button>
-                    </form>
-                </td>
+                <td colspan="25">No cards found in the database.</td>
             </tr>
-        <?php endforeach; ?>
-    <?php else: ?>
-        <tr>
-            <td colspan="8">No cards found in the database.</td>
-        </tr>
-    <?php endif; ?>
-</tbody>
+        <?php endif; ?>
+        </tbody>
     </table>
 </body>
 </html>
