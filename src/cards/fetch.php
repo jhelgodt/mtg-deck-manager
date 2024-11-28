@@ -1,5 +1,5 @@
 <?php
-require '../db/connect.php'; // Inkludera databasanslutningen
+require '../../db/connect.php'; // Inkludera databasanslutningen
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
     $cardName = urlencode($_POST['card_name']); // Kodar kortnamnet för URL
@@ -97,7 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
             $stmt->bindParam(':card_name', $_POST['card_name']);
             $stmt->execute();
 
-            header("Location: index.php");
+            header("Location: ../index.php");
             exit;
         } catch (PDOException $e) {
             echo "<p>Error updating card: " . htmlspecialchars($e->getMessage()) . "</p>";
