@@ -23,6 +23,7 @@ try {
             <th>Oracle Text</th>
             <th>Image</th>
             <th>Last Updated</th>
+            <th>Actions</th> <!-- Ny kolumn för knappar -->
         </tr>
     </thead>
     <tbody>
@@ -45,11 +46,18 @@ try {
                     <?php endif; ?>
                 </td>
                 <td><?= htmlspecialchars($row['last_updated'] ?? 'N/A') ?></td>
+                <td>
+                    <!-- Knapp för att hämta data från Scryfall -->
+                    <form action="../cards/fetch.php" method="POST" style="display:inline;">
+                        <input type="hidden" name="card_name" value="<?= htmlspecialchars($row['card_name']) ?>">
+                        <button type="submit">Fetch Data</button>
+                    </form>
+                </td>
             </tr>
         <?php endforeach; ?>
     <?php else: ?>
         <tr>
-            <td colspan="10">No cards found in the database.</td>
+            <td colspan="11">No cards found in the database.</td>
         </tr>
     <?php endif; ?>
     </tbody>
