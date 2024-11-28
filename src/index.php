@@ -2,6 +2,21 @@
 // Inkludera databasanslutningen
 require '../db/connect.php';
 
+// Hantera inmatning från formuläret
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['new_card_name'])) {
+    $newCardName = htmlspecialchars($_POST['new_card_name']); // Rensa inmatningen för säkerhet
+
+    try {
+        // Infoga ett nytt kort i databasen
+        $stmt = $conn->prepare("INSERT INTO cards (card_name) VALUES (:card_name)");
+        $stmt->bindParam(':card_name', $newCardName);
+        $stmt->execute();
+        echo "<p>Card '$newCardName' has been added successfully.</p>";
+    } catch (PDOException $e) {
+        echo "<p>Error adding card: " . htmlspecialchars($e->getMessage()) . "</p>";
+    }
+}
+
 try {
     // Hämta alla kort från tabellen
     $stmt = $conn->query("SELECT * FROM cards");
@@ -19,9 +34,17 @@ try {
 </head>
 <body>
     <h1>Magic the Gathering: Deck Builder</h1>
-    <h2>Cards in Database</h2>
+
+    <!-- Formulär för att lägga till ett nytt kort -->
+    <h2>Add a New Card</h2>
+    <form method="POST" action="">
+        <label for="new_card_name">Card Name:</label>
+        <input type="text" id="new_card_name" name="new_card_name" required>
+        <button type="submit">Add Card</button>
+    </form>
 
     <!-- Visa tabellen med kort -->
+    <h2>Cards in Database</h2>
     <table border="1" cellspacing="0" cellpadding="5">
         <thead>
             <tr>
