@@ -52,6 +52,7 @@ try {
                 <th>Card Name</th>
                 <th>Mana Cost</th>
                 <th>Type Line</th>
+                <th>Keywords</th>
                 <th>Set Name</th>
                 <th>Rarity</th>
                 <th>Oracle Text</th>
@@ -83,6 +84,7 @@ try {
                     <td><?= htmlspecialchars($row['card_name']) ?></td>
                     <td><?= htmlspecialchars($row['mana_cost']) ?></td>
                     <td><?= htmlspecialchars($row['type_line']) ?></td>
+                    <td><?= htmlspecialchars($row['keywords'] ?? 'N/A') ?></td>
                     <td><?= htmlspecialchars($row['set_name']) ?></td>
                     <td><?= htmlspecialchars($row['rarity']) ?></td>
                     <td><?= htmlspecialchars($row['oracle_text'] ?? 'N/A') ?></td>

@@ -37,6 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
         $color_identity = isset($data['color_identity']) ? implode(',', $data['color_identity']) : null;
         $produced_mana = isset($data['produced_mana']) ? implode(',', $data['produced_mana']) : null;
         $games = isset($data['games']) ? implode(',', $data['games']) : null;
+        $oracle_text = $data['oracle_text'] ?? null;
+        $keywords = isset($data['keywords']) ? implode(',', $data['keywords']) : null;
 
         // Uppdatera databasen med all hämtad data
         try {
@@ -63,6 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
                     tix_price = :tix_price,
                     toughness = :toughness,
                     power = :power,
+                    oracle_text = :oracle_text,
+                    keywords = :keywords,
                     image_uri = :image_uri,
                     last_updated = CURRENT_TIMESTAMP
                 WHERE card_name = :card_name
@@ -87,6 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['card_name'])) {
             $stmt->bindParam(':tix_price', $data['prices']['tix']);
             $stmt->bindParam(':toughness', $data['toughness']);
             $stmt->bindParam(':power', $data['power']);
+            $stmt->bindParam(':oracle_text', $oracle_text);
+            $stmt->bindParam(':keywords', $keywords);
             $stmt->bindParam(':image_uri', $data['image_uris']['normal']);
             $stmt->bindParam(':card_name', $_POST['card_name']);
             $stmt->execute();
