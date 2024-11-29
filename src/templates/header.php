@@ -12,5 +12,6 @@
         <a href="../index.php">Home</a>
         <a href="../cards/add.php">Add Card</a>
         <a href="../cards/list.php">View Cards</a>
+        <a href="../decks/list.php">View Decks</a>
     </nav>
 </header>

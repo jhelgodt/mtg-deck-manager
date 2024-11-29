@@ -1,9 +1,16 @@
 <?php
-include 'templates/header.php'; // Header
-require __DIR__ . '/../db/connect.php';
+// Inkludera sidhuvud
+include_once 'templates/header.php';
 
-// Visa listan över kort
-include 'cards/list.php';
+// Anslut till databasen
+require_once __DIR__ . '/../db/connect.php';
 
-include 'templates/footer.php'; // Footer
+// Visa alla kort
+include_once 'cards/list.php';
+
+// Visa alla decks
+include_once 'decks/list.php';
+
+// Inkludera sidfot
+include_once 'templates/footer.php';
 ?>
