@@ -11,22 +11,20 @@ try {
 }
 ?>
 
-<h2>Your Decks</h2>
+<h2>Deck Management</h2>
 <nav>
-    <a href="../index.php">Home</a> |
-    <a href="../cards/list.php">View Cards</a>
+    <a href="../index.php">Back to Home</a>
 </nav>
 <ul>
     <?php if (!empty($decks)): ?>
         <?php foreach ($decks as $deck): ?>
             <li>
                 <?= htmlspecialchars($deck['name']) ?>
-                <!-- Länk för att visa deckets innehåll -->
-                <a href="view.php?deck_id=<?= htmlspecialchars($deck['id']) ?>">View</a>
+                <!-- Korrekt länk till decks/view.php -->
+                <a href="decks/view.php?deck_id=<?= htmlspecialchars($deck['id']) ?>">View</a>
             </li>
         <?php endforeach; ?>
     <?php else: ?>
-        <li>No decks found.</li>
+        <li>No decks found. <a href="decks/create.php">Create a New Deck</a></li>
     <?php endif; ?>
 </ul>
-<a href="create.php">Create a New Deck</a>
