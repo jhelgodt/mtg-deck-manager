@@ -19,9 +19,10 @@ try {
     }
 
     // Hämta kort relaterade till däcket
-    $sql = "SELECT c.*, dc.quantity_active, dc.quantity_considering 
+    $sql = "SELECT c.*, dc.quantity_active, dc.quantity_considering, dr.rating, dr.comment 
             FROM deck_cards dc
             JOIN cards c ON dc.card_id = c.card_id
+            LEFT JOIN deck_ratings dr ON dc.card_id = dr.card_id AND dc.deck_id = dr.deck_id
             WHERE dc.deck_id = :deck_id";
     $stmt = $conn->prepare($sql);
     $stmt->execute(['deck_id' => $deckId]);
@@ -35,32 +36,13 @@ try {
     die("Error fetching deck or cards: " . $e->getMessage());
 }
 
-// Hantera inlämning för att lägga till, uppdatera eller ta bort kort
+// Hantera inlämning för olika operationer
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? null;
     $cardId = $_POST['card_id'] ?? null;
 
-    if ($action === 'add_card' && $cardId) {
-        $quantityActive = $_POST['quantity_active'] ?? 0;
-        $quantityConsidering = $_POST['quantity_considering'] ?? 0;
-
-        try {
-            $sql = "INSERT INTO deck_cards (deck_id, card_id, quantity_active, quantity_considering)
-                    VALUES (:deck_id, :card_id, :quantity_active, :quantity_considering)
-                    ON DUPLICATE KEY UPDATE 
-                    quantity_active = :quantity_active,
-                    quantity_considering = :quantity_considering";
-            $stmt = $conn->prepare($sql);
-            $stmt->execute([
-                'deck_id' => $deckId,
-                'card_id' => $cardId,
-                'quantity_active' => $quantityActive,
-                'quantity_considering' => $quantityConsidering
-            ]);
-        } catch (PDOException $e) {
-            die("Error adding card to deck: " . $e->getMessage());
-        }
-    } elseif ($action === 'update_card' && $cardId) {
+    if ($action === 'update_card' && $cardId) {
+        // Uppdatera Active/Considering
         $quantityActive = $_POST['quantity_active'] ?? 0;
         $quantityConsidering = $_POST['quantity_considering'] ?? 0;
 
@@ -78,7 +60,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (PDOException $e) {
             die("Error updating card in deck: " . $e->getMessage());
         }
+    } elseif ($action === 'rate_card' && $cardId) {
+        // Uppdatera Rating/Comment
+        $rating = $_POST['rating'] ?? null;
+        $comment = $_POST['comment'] ?? '';
+
+        if ($rating !== null) {
+            try {
+                $sql = "
+                    INSERT INTO deck_ratings (deck_id, card_id, rating, comment)
+                    VALUES (:deck_id, :card_id, :rating, :comment)
+                    ON DUPLICATE KEY UPDATE 
+                    rating = :rating, comment = :comment, rated_at = CURRENT_TIMESTAMP";
+                $stmt = $conn->prepare($sql);
+                $stmt->execute([
+                    'deck_id' => $deckId,
+                    'card_id' => $cardId,
+                    'rating' => $rating,
+                    'comment' => $comment
+                ]);
+            } catch (PDOException $e) {
+                die("Error saving rating: " . $e->getMessage());
+            }
+        }
     } elseif ($action === 'remove_card' && $cardId) {
+        // Ta bort kort från deck
         try {
             $sql = "DELETE FROM deck_cards WHERE deck_id = :deck_id AND card_id = :card_id";
             $stmt = $conn->prepare($sql);
@@ -117,6 +123,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <th>Image</th>
                 <th>Active</th>
                 <th>Considering</th>
+                <th>Rating</th>
+                <th>Comment</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -141,10 +149,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     </td>
                     <td>
                             <input type="number" name="quantity_considering" value="<?= $card['quantity_considering'] ?>" min="0">
+                            <button type="submit">Save</button>
+                        </form>
                     </td>
                     <td>
-                            <button type="submit">Update</button>
+                        <form method="POST">
+                            <input type="hidden" name="action" value="rate_card">
+                            <input type="hidden" name="card_id" value="<?= $card['card_id'] ?>">
+                            <input type="number" name="rating" value="<?= htmlspecialchars($card['rating'] ?? '') ?>" step="0.1" min="0" max="10">
+                    </td>
+                    <td>
+                            <input type="text" name="comment" value="<?= htmlspecialchars($card['comment'] ?? '') ?>">
+                            <button type="submit">Rate</button>
                         </form>
+                    </td>
+                    <td>
                         <form method="POST" style="display:inline;">
                             <input type="hidden" name="action" value="remove_card">
                             <input type="hidden" name="card_id" value="<?= $card['card_id'] ?>">
@@ -155,26 +174,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endforeach; ?>
         </tbody>
     </table>
-
-    <!-- Formulär för att lägga till kort -->
-    <h2>Add Card to Deck</h2>
-    <form method="POST">
-        <input type="hidden" name="action" value="add_card">
-        <label for="card_id">Select Card:</label>
-        <select id="card_id" name="card_id" required>
-            <?php foreach ($allCards as $card): ?>
-                <option value="<?= $card['card_id'] ?>"><?= htmlspecialchars($card['card_name']) ?></option>
-            <?php endforeach; ?>
-        </select>
-        <br>
-        <label for="quantity_active">Quantity Active:</label>
-        <input type="number" id="quantity_active" name="quantity_active" value="0" min="0">
-        <br>
-        <label for="quantity_considering">Quantity Considering:</label>
-        <input type="number" id="quantity_considering" name="quantity_considering" value="0" min="0">
-        <br>
-        <button type="submit">Add to Deck</button>
-    </form>
 
     <a href="index.php">Back to Decks</a>
 </body>
