@@ -22,44 +22,57 @@ try {
 <body>
     <h1>All Cards</h1>
 
+    <?php if (isset($_GET['success'])): ?>
+        <p style="color: green;">Card updated successfully!</p>
+    <?php elseif (isset($_GET['error'])): ?>
+        <p style="color: red;">Failed to update card. Check the logs for details.</p>
+    <?php endif; ?>
+
     <!-- Tabell med alla kort -->
     <table>
-    <thead>
-    <tr>
-        <th>Card ID</th>
-        <th>Card Name</th>
-        <th>Image</th>
-        <th title="Mana Cost and CMC">Mana (CMC)</th>
-        <th>Type</th>
-        <th>Set/Rarity</th>
-        <th>Text</th>
-        <th>Color/Produced</th>
-        <th>Power/Toughness</th>
-        <th>Price</th>
-    </tr>
-</thead>
-<tbody>
-    <?php foreach ($cards as $card): ?>
-        <tr>
-            <td><?= htmlspecialchars($card['card_id'] ?? '') ?></td>
-            <td><?= htmlspecialchars($card['card_name'] ?? '') ?></td>
-            <td>
-                <?php if (!empty($card['image_uri'])): ?>
-                    <img class="card-image" src="<?= htmlspecialchars($card['image_uri']) ?>" alt="Card Image" width="100">
-                <?php else: ?>
-                    No Image
-                <?php endif; ?>
-            </td>
-            <td><?= htmlspecialchars($card['mana_cost'] ?? '') ?> (<?= htmlspecialchars($card['cmc'] ?? '') ?>)</td>
-            <td><?= htmlspecialchars($card['type_line'] ?? '') ?></td>
-            <td><?= htmlspecialchars($card['set_name'] ?? '') ?> (<?= htmlspecialchars($card['rarity'] ?? '') ?>)</td>
-            <td><?= htmlspecialchars($card['oracle_text'] ?? '') ?></td>
-            <td><?= htmlspecialchars($card['color_identity'] ?? '') ?> (<?= htmlspecialchars($card['produced_mana'] ?? '') ?>)</td>
-            <td><?= htmlspecialchars($card['power'] ?? '') ?>/<?= htmlspecialchars($card['toughness'] ?? '') ?></td>
-            <td>USD: <?= htmlspecialchars($card['usd_price'] ?? '0.00') ?></td>
-        </tr>
-    <?php endforeach; ?>
-</tbody>
+        <thead>
+            <tr>
+                <th>Card ID</th>
+                <th>Card Name</th>
+                <th>Image</th>
+                <th title="Mana Cost and CMC">Mana (CMC)</th>
+                <th>Type</th>
+                <th>Set/Rarity</th>
+                <th>Text</th>
+                <th>Color/Produced</th>
+                <th>Power/Toughness</th>
+                <th>Price</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($cards as $card): ?>
+                <tr>
+                    <td><?= htmlspecialchars($card['card_id'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($card['card_name'] ?? '') ?></td>
+                    <td>
+                        <?php if (!empty($card['image_uri'])): ?>
+                            <img class="card-image" src="<?= htmlspecialchars($card['image_uri']) ?>" alt="Card Image" width="100">
+                        <?php else: ?>
+                            No Image
+                        <?php endif; ?>
+                    </td>
+                    <td><?= htmlspecialchars($card['mana_cost'] ?? '') ?> (<?= htmlspecialchars($card['cmc'] ?? '') ?>)</td>
+                    <td><?= htmlspecialchars($card['type_line'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($card['set_name'] ?? '') ?> (<?= htmlspecialchars($card['rarity'] ?? '') ?>)</td>
+                    <td><?= htmlspecialchars($card['oracle_text'] ?? '') ?></td>
+                    <td><?= htmlspecialchars($card['color_identity'] ?? '') ?> (<?= htmlspecialchars($card['produced_mana'] ?? '') ?>)</td>
+                    <td><?= htmlspecialchars($card['power'] ?? '') ?>/<?= htmlspecialchars($card['toughness'] ?? '') ?></td>
+                    <td>USD: <?= htmlspecialchars($card['usd_price'] ?? '0.00') ?></td>
+                    <td>
+                        <form method="POST" action="update_card.php">
+                            <input type="hidden" name="card_name" value="<?= htmlspecialchars($card['card_name']) ?>">
+                            <button type="submit">Update</button>
+                        </form>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
     </table>
 
     <a href="../index.php">Back to Deck Manager</a>
