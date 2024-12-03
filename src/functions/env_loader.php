@@ -7,6 +7,8 @@
  */
 function loadEnv($filePath)
 {
+    echo "Loading .env from: $filePath<br>"; // Debug-utskrift för att visa sökvägen
+
     if (!file_exists($filePath)) {
         throw new Exception("The .env file does not exist at: $filePath");
     }
@@ -18,8 +20,22 @@ function loadEnv($filePath)
             continue;
         }
 
-        // Dela upp nyckel och värde vid '='
+        // Kontrollera om linjen är ett giltigt nyckel-värde-par
+        if (!strpos($line, '=')) {
+            throw new Exception("Invalid format in .env file: $line");
+        }
+
+        // Dela upp nyckel och värde
         [$key, $value] = explode('=', $line, 2);
-        $_ENV[trim($key)] = trim($value);
+
+        // Trimma mellanslag och citattecken
+        $key = trim($key);
+        $value = trim($value, " \t\n\r\0\x0B\"'");
+
+        echo "Loaded key: $key, value: $value<br>"; // Debug-utskrift för att visa laddade variabler
+
+        // Lägg till variabeln i $_ENV och putenv
+        $_ENV[$key] = $value;
+        putenv("$key=$value");
     }
 }

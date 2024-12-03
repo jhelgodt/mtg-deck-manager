@@ -1,28 +1,29 @@
 <?php
+require_once __DIR__ . '/../config.php'; // Inkludera config.php
 
-require_once BASE_PATH . '/config.php';
 try {
-    // Databasinställningar
-    $servername = 'mariadb';  // MariaDB-tjänstens namn i Docker Compose
-    $username = 'mariadb';    // Användarnamn
-    $password = 'mariadb';    // Lösenord
-    $dbname = 'mariadb';      // Databasnamn
-    $charset = 'utf8mb4';     // Teckenuppsättning
+    // Ladda miljövariabler från .env
+    loadEnv(__DIR__ . '/../.env');
 
-    // PDO Data Source Name (DSN)
+    // Debug: Visa laddade variabler
+    echo "MYSQL_HOST: " . getenv('MYSQL_HOST') . "<br>";
+    echo "MYSQL_USER: " . getenv('MYSQL_USER') . "<br>";
+    echo "MYSQL_PASSWORD: " . getenv('MYSQL_PASSWORD') . "<br>";
+    echo "MYSQL_DATABASE: " . getenv('MYSQL_DATABASE') . "<br>";
+
+    // Anslut till databasen
+    $servername = getenv('MYSQL_HOST') ?: 'localhost';
+    $username = getenv('MYSQL_USER') ?: 'root';
+    $password = getenv('MYSQL_PASSWORD') ?: '';
+    $dbname = getenv('MYSQL_DATABASE') ?: 'test';
+    $charset = 'utf8mb4';
+
     $dsn = "mysql:host=$servername;dbname=$dbname;charset=$charset";
-
-    // Skapa en ny PDO-anslutning
     $conn = new PDO($dsn, $username, $password);
-
-    // Ställ in PDO-felhanteringsläge
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    // Kontrollera anslutningen (valfritt)
-    echo "Connected successfully";
-
-} catch (PDOException $e) {
-    // Logga felet istället för att visa det i produktion
-    error_log("Database connection failed: " . $e->getMessage());
+    echo "Connected successfully<br>";
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage() . "<br>";
     die("Database connection failed. Please try again later.");
 }
