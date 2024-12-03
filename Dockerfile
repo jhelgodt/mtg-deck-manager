@@ -12,7 +12,6 @@ RUN composer global require --dev phpunit/phpunit ^11
 
 ENV PATH=/root/.composer/vendor/bin:$PATH
 
-COPY ./tests /var/www/html/tests
 COPY ./src /var/www/html/src
 
 COPY config.sh /usr/local/bin/config.sh

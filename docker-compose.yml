@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - 80:80
+      - "80:80"
     volumes:
       - .:/var/www/html/
     environment:
@@ -17,21 +17,22 @@ services:
     container_name: mariadb
     restart: always
     environment:
-      MYSQL_USER: mariadb
-      MYSQL_PASSWORD: mariadb
-      MYSQL_DATABASE: mariadb
-      MARIADB_ROOT_PASSWORD: mariadb
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
     ports:
-      - 3306:3306
+      - "3306:3306"
     volumes:
       - mariadb_data:/var/lib/mysql
+      - ./src/seed:/docker-entrypoint-initdb.d:ro
 
   adminer:
     image: adminer:latest
     container_name: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "8080:8080"
 
 volumes:
   mariadb_data:
