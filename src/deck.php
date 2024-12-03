@@ -113,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <tr>
                 <th>Card Name</th>
                 <th>Mana Cost</th>
+                <th>Price</th>
                 <th>Image</th>
                 <th>Active</th>
                 <th>Considering</th>
@@ -124,6 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <tr>
                     <td><?= htmlspecialchars($card['card_name']) ?></td>
                     <td><?= htmlspecialchars($card['mana_cost'] ?? '') ?></td>
+                    <td>USD: <?= htmlspecialchars($card['usd_price'] ?? '0.00') ?></td>
                     <td>
                         <?php if (!empty($card['image_uri'])): ?>
                             <img class="card-image" src="<?= htmlspecialchars($card['image_uri']) ?>" alt="Card Image">
