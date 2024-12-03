@@ -11,3 +11,4 @@ docker-compose.override.yml
 # Exkludera temporära filer
 *.tmp
 *.swp
+.DS_Store
