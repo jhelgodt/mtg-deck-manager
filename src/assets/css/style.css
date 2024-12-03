@@ -46,7 +46,13 @@ a:hover {
 /* Bilder */
 img {
   display: block;
-  max-width: 100%;
   height: auto;
   border-radius: 5px;
+}
+img.card-image {
+  width: 220px; /* Ändra storleken här */
+  height: auto;
+  border: 1px solid #ccc; /* För att göra bilden tydligare */
+  border-radius: 5px; /* Mjuka hörn */
+  margin: 5px;
 }
