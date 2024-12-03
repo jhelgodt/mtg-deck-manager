@@ -46,6 +46,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <button type="submit">Create Deck</button>
     </form>
 
+    <!-- Länk till alla kort -->
+    <h2>Manage Cards</h2>
+    <a href="all_cards.php">View All Cards</a>
+
     <!-- Lista över alla däck -->
     <h2>All Decks</h2>
     <ul>
