@@ -1,0 +1,13 @@
+# Ignorera .env-filen för att skydda känslig information
+.env
+
+# Exkludera node_modules om du använder Node.js
+node_modules/
+
+# Ignorera Docker-relaterade filer (om relevant)
+*.log
+docker-compose.override.yml
+
+# Exkludera temporära filer
+*.tmp
+*.swp
