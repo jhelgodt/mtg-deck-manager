@@ -1,0 +1,52 @@
+/* Styling för tabellen */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+th,
+td {
+  border: 1px solid #ccc;
+  padding: 10px;
+  text-align: left;
+}
+
+th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 14px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+tr:hover {
+  background-color: #e9ecef;
+}
+
+/* Styling för rubriker */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+/* Länkar */
+a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* Bilder */
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 5px;
+}
